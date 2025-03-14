@@ -1,6 +1,3 @@
-CREATE DATABASE smm_panel;
-USE smm_panel;
-
 CREATE TABLE orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     service VARCHAR(255) NOT NULL,
