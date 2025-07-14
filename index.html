@@ -1,104 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMM Panel</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f4; padding: 20px; }
-        .container { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        input, button { width: 100%; padding: 10px; margin: 10px 0; }
-        button { background: #008CBA; color: white; border: none; cursor: pointer; }
-    </style>
+  <title>Main Page</title>
 </head>
 <body>
+  <h1>Welcome!</h1>
+  <button onclick="logout()">Logout</button>
 
-    <div class="container" id="login-section">
-        <h2>Login to SMM Panel</h2>
-        <input type="text" id="login-username" placeholder="Username" required>
-        <input type="password" id="login-password" placeholder="Password" required>
-        <button onclick="login()">Login</button>
-        <p>Don't have an account? <a href="#" onclick="showSignup()">Sign Up</a></p>
-        <p id="login-response"></p>
-    </div>
+  <script>
+    const isLoggedIn = localStorage.getItem("logged_in") === "true";
+    const currentDevice = localStorage.getItem("device_id");
+    const authorized = localStorage.getItem("authorized_device");
 
-    <div class="container" id="signup-section" style="display:none;">
-        <h2>Sign Up for SMM Panel</h2>
-        <input type="text" id="signup-username" placeholder="Username" required>
-        <input type="password" id="signup-password" placeholder="Password" required>
-        <button onclick="signup()">Sign Up</button>
-        <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
-        <p id="signup-response"></p>
-    </div>
+    if (!isLoggedIn || currentDevice !== authorized) {
+      window.location.href = "login.html";
+    }
 
-    <div class="container" id="dashboard-section" style="display:none;">
-        <h2>Welcome to Your Dashboard</h2>
-        <input type="text" id="username" placeholder="Instagram Username" required>
-        <input type="number" id="quantity" placeholder="Number of Followers" required>
-        <button onclick="submitOrder()">Submit Order</button>
-        <p id="order-response"></p>
-    </div>
-
-    <script>
-        function showSignup() {
-            document.getElementById("login-section").style.display = "none";
-            document.getElementById("signup-section").style.display = "block";
-        }
-
-        function showLogin() {
-            document.getElementById("signup-section").style.display = "none";
-            document.getElementById("login-section").style.display = "block";
-        }
-
-        function login() {
-            let username = document.getElementById("login-username").value;
-            let password = document.getElementById("login-password").value;
-
-            fetch("https://msmpr.free.nf/login.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: `username=${username}&password=${password}`
-            })
-            .then(response => response.text())
-            .then(data => {
-                if (data.includes("success")) {
-                    document.getElementById("login-section").style.display = "none";
-                    document.getElementById("dashboard-section").style.display = "block";
-                } else {
-                    document.getElementById("login-response").innerHTML = data;
-                }
-            })
-            .catch(error => console.error("Error:", error));
-        }
-
-        function signup() {
-            let username = document.getElementById("signup-username").value;
-            let password = document.getElementById("signup-password").value;
-
-            fetch("https://msmpr.free.nf/signup.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: `username=${username}&password=${password}`
-            })
-            .then(response => response.text())
-            .then(data => document.getElementById("signup-response").innerHTML = data)
-            .catch(error => console.error("Error:", error));
-        }
-
-        function submitOrder() {
-            let username = document.getElementById("username").value;
-            let quantity = document.getElementById("quantity").value;
-
-            fetch("https://msmpr.free.nf/api.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: `username=${username}&quantity=${quantity}`
-            })
-            .then(response => response.text())
-            .then(data => document.getElementById("order-response").innerHTML = data)
-            .catch(error => console.error("Error:", error));
-        }
-    </script>
-
+    function logout() {
+      localStorage.removeItem("logged_in");
+      window.location.href = "login.html";
+    }
+  </script>
 </body>
 </html>
